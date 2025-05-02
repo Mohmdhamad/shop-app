@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop/models/login_model/login_model.dart';
+import 'package:shop/models/login_model.dart';
 import 'package:shop/shared/cubits/login_cubit/login_states.dart';
 import 'package:shop/shared/network/end_points.dart';
 import 'package:shop/shared/network/remote/dio_helper.dart';

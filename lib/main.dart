@@ -2,8 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop/layout/home_layout.dart';
-import 'package:shop/modules/login_screen/login_screen.dart';
+import 'package:shop/modules/login/login_screen.dart';
 import 'package:shop/modules/on_boarding/on_boarding_screen.dart';
+import 'package:shop/shared/component/constants.dart';
+import 'package:shop/shared/cubits/app_cubit/app_cubit.dart';
 import 'package:shop/shared/cubits/bloc_observer.dart';
 import 'package:shop/shared/cubits/theme_cubit/theme_cubit.dart';
 import 'package:shop/shared/cubits/theme_cubit/theme_states.dart';
@@ -17,9 +19,9 @@ void main() async {
   DioHelper.init();
   await CacheHelper.init();
   bool? isDark = CacheHelper.getData(key: 'isDark');
-  Widget widget ;
+  Widget widget;
   bool? onBoarding = CacheHelper.getData(key: 'onBoarding');
-  String? token = CacheHelper.getData(key: 'token');
+  token = CacheHelper.getData(key: 'token');
   if (onBoarding != null) {
     if (token != null) {
       widget = HomeLayout();
@@ -44,6 +46,8 @@ class MyApp extends StatelessWidget {
           create:
               (BuildContext context) =>
                   AppThemeCubit()..changeThemeMode(fromShared: isDark),
+        ),
+        BlocProvider(create: (BuildContext context)=>AppCubit()..getHomeData(),
         ),
       ],
       child: BlocConsumer<AppThemeCubit, AppThemeStates>(

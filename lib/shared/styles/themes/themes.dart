@@ -55,7 +55,6 @@ ThemeData lightTheme = ThemeData(
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: Colors.grey[300],
       statusBarIconBrightness: Brightness.dark,
-
     ),
     titleSpacing: 20.0,
     actionsIconTheme: IconThemeData(color: Colors.black54),
@@ -69,7 +68,7 @@ ThemeData lightTheme = ThemeData(
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
-    selectedItemColor: Colors.deepOrangeAccent,
+    selectedItemColor: defaultColor,
     unselectedItemColor: Colors.grey,
     backgroundColor: Colors.white,
     elevation: 45.0,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop/layout/home_layout.dart';
-import 'package:shop/modules/register_screen/register_screen.dart';
+import 'package:shop/modules/register/register_screen.dart';
 import 'package:shop/shared/component/components.dart';
 import 'package:shop/shared/cubits/login_cubit/login_cubit.dart';
 import 'package:shop/shared/cubits/login_cubit/login_states.dart';
@@ -103,7 +103,7 @@ class LoginScreen extends StatelessWidget {
                               (context) =>
                                   Center(child: CircularProgressIndicator()),
                           builder:
-                              (context) => defaultButton(
+                              (context) => defaultFloatingButton(
                                 function: () {
                                   if (formKey.currentState!.validate()) {
                                     loginCubit.userLogin(

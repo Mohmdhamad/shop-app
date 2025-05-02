@@ -43,9 +43,8 @@ Widget defaultFormField({
   );
 }
 
-Widget defaultButton({
+Widget defaultFloatingButton({
   double width = double.infinity,
-  Color background = Colors.blue,
   double radius = 15.0,
   bool isUpperCase = false,
   required Function function,
@@ -56,7 +55,6 @@ Widget defaultButton({
       height: 40.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius),
-        color: background,
       ),
       child: MaterialButton(
         onPressed: () {
