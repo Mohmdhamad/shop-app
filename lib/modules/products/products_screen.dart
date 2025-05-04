@@ -2,13 +2,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop/models/categories_model.dart';
 import 'package:shop/models/home_model.dart';
 import 'package:shop/shared/cubits/app_cubit/app_cubit.dart';
 import 'package:shop/shared/cubits/app_cubit/app_states.dart';
 import 'package:shop/shared/styles/colors/colors.dart';
 
 class ProductsScreen extends StatelessWidget {
-  const ProductsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,21 +17,22 @@ class ProductsScreen extends StatelessWidget {
       builder: (context, state) {
         var homeCubit = AppCubit.get(context);
         return ConditionalBuilder(
-          condition: homeCubit.homeModel != null,
-          builder: (context) => homeBuilder(homeCubit.homeModel!),
+          condition: homeCubit.homeModel != null && homeCubit.categoriesModel != null,
+          builder: (context) => homeBuilder(homeCubit.homeModel!,homeCubit.categoriesModel!,context),
           fallback: (context) => Center(child: CircularProgressIndicator()),
         );
       },
     );
   }
 
-  Widget homeBuilder(HomeModel model) => SingleChildScrollView(
+  Widget homeBuilder(HomeModel homeModel,CategoriesModel categoriesModel,context) => SingleChildScrollView(
     physics: BouncingScrollPhysics(),
     child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CarouselSlider(
           items:
-              model.data.banners
+              homeModel.data.banners
                   .map(
                     (e) => Image(
                       image: NetworkImage('${e.image}'),
@@ -53,9 +54,53 @@ class ProductsScreen extends StatelessWidget {
             scrollDirection: Axis.horizontal,
           ),
         ),
-        SizedBox(height: 11.0),
+        defaultVerticalSeparator(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Row(
+            children: [
+              Text(
+                'Categories',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              SizedBox(width: 25.0,),
+              Icon(
+                Icons.menu,
+              ),
+            ],
+          ),
+        ),
+        defaultVerticalSeparator(),
+        Container(height: 100.0,
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          child: ListView.separated(
+            physics: BouncingScrollPhysics(),
+              itemBuilder: (context,index)=>categoriesBuilder(categoriesModel.data.data[index]),
+              separatorBuilder:(context,index) =>Container(
+                color: defaultPagesColor,
+                width: 10.0,
+              ),
+              scrollDirection: Axis.horizontal,
+              itemCount: categoriesModel.data.data.length,
+          ),
+        ),
+        defaultVerticalSeparator(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Text(
+            'New Products',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
+            ),
+          ),
+        ),
+        defaultVerticalSeparator(),
         Container(
-          color: Colors.grey[300],
+          color: defaultPagesColor,
           child: GridView.count(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
@@ -64,17 +109,45 @@ class ProductsScreen extends StatelessWidget {
             mainAxisSpacing: 7.0,
             childAspectRatio: 1 / 1.53,
             children: List.generate(
-              model.data.products.length,
-              (index) => productBuilder(model.data.products[index]),
+              homeModel.data.products.length,
+              (index) => productBuilder(homeModel.data.products[index],context),
             ),
           ),
         ),
       ],
     ),
   );
-
-  Widget productBuilder(ProductModel model) => Container(
-    color: Colors.white,
+  Widget categoriesBuilder(DataModelOfCategories model)=>Stack(
+  alignment: Alignment.bottomCenter,
+  children: [
+  Image(image: NetworkImage(model.image,),
+  width: 100.0,
+  height: 100.0,
+  fit: BoxFit.cover,
+  ),
+  Container(
+  width: 100.0,
+  decoration: BoxDecoration(
+  color: Colors.black.withOpacity(0.7),
+  borderRadius: BorderRadiusDirectional.circular(7.5),
+  ),
+  child: Text(
+  model.name,
+  textAlign: TextAlign.center,
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+  style: TextStyle(
+  color: Colors.white,
+  ),
+  ),
+  ),
+  ],
+  );
+  Widget productBuilder(ProductModel model,context) => Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadiusDirectional.circular(7.5),
+    ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -123,13 +196,17 @@ class ProductsScreen extends StatelessWidget {
                       ),
                     ),
                   Spacer(),
-                  IconButton(onPressed: (){
-
-                  },
-                      icon: Icon(
-                        Icons.favorite_border_outlined,
-                        size: 21.0,
-                      ),
+                  CircleAvatar(
+                    backgroundColor: AppCubit.get(context).favorites[model.id]! ? defaultColor : Colors.grey,
+                    child: IconButton(onPressed: (){
+                      print(model.id);
+                    },
+                        icon: Icon(
+                          color: Colors.white,
+                          Icons.favorite_border_outlined,
+                          size: 21.0,
+                        ),
+                    ),
                   )
                 ],
               ),
@@ -139,4 +216,9 @@ class ProductsScreen extends StatelessWidget {
       ],
     ),
   );
+  Widget defaultVerticalSeparator()=>Container(
+  height: 7.0,
+  color: defaultPagesColor,
+  );
+
 }

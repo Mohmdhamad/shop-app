@@ -8,3 +8,9 @@ class ErrorHomeDataState extends AppStates{
   final String error;
   ErrorHomeDataState(this.error);
 }
+class SuccessCategoriesDataState extends AppStates{}
+class ErrorCategoriesDataState extends AppStates{
+  final String error;
+  ErrorCategoriesDataState(this.error);
+}
+

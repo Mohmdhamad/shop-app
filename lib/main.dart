@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
               (BuildContext context) =>
                   AppThemeCubit()..changeThemeMode(fromShared: isDark),
         ),
-        BlocProvider(create: (BuildContext context)=>AppCubit()..getHomeData(),
+        BlocProvider(create: (BuildContext context)=>AppCubit()..getHomeData()..getCategoriesData(),
         ),
       ],
       child: BlocConsumer<AppThemeCubit, AppThemeStates>(

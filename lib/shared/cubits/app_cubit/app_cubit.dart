@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop/models/categories_model.dart';
 import 'package:shop/models/home_model.dart';
 import 'package:shop/modules/categories/categories_screen.dart';
 import 'package:shop/modules/products/products_screen.dart';
@@ -27,6 +28,7 @@ class AppCubit extends Cubit<AppStates>{
     emit(ChangeBottomNavState());
   }
    HomeModel? homeModel;
+  Map<int,bool> favorites = {};
   void getHomeData (){
     emit(LoadingHomeDataState());
     DioHelper.getData(
@@ -34,8 +36,13 @@ class AppCubit extends Cubit<AppStates>{
       token: token,
         ).then((value){
           homeModel=HomeModel.fromJson(value.data);
-          printFullText(homeModel!.data.banners[0].id.toString());
+           homeModel!.data.products.forEach((element){
+            favorites.addAll({
+              element.id:element.inFavorites,
+            });
+          });
           print(homeModel!.status);
+          print(favorites.toString());
           emit(SuccessHomeDataState());
     }).catchError((error){
       print(error.toString());
@@ -43,5 +50,18 @@ class AppCubit extends Cubit<AppStates>{
     });
   }
 
+  CategoriesModel? categoriesModel;
+  void getCategoriesData (){
+    DioHelper.getData(
+      url: GET_CATEGORIES,
+      token: token,
+    ).then((value){
+      categoriesModel=CategoriesModel.fromJson(value.data);
+      emit(SuccessCategoriesDataState());
+    }).catchError((error){
+      print(error.toString());
+      emit(ErrorCategoriesDataState(error.toString()));
+    });
+  }
 
 }
